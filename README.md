@@ -1,6 +1,6 @@
 ![GitHub last commit](https://img.shields.io/github/last-commit/riteshroshann/ALL-AI-AGENTS-MAPS-ROX-Avenus)
 ![GitHub issues](https://img.shields.io/github/issues/riteshroshann/ALL-AI-AGENTS-MAPS-ROX-Avenus)
-![GitHub license](https://img.shields.io/github/license/riteshroshann/ALL-AI-AGENTS-MAPS-ROX-Avenus)
+![MIT License](https://img.shields.io/badge/license-MIT-green.svg)
 ![GitHub stars](https://img.shields.io/github/stars/riteshroshann/ALL-AI-AGENTS-MAPS-ROX-Avenus?style=social)
 
 # ALL AI AGENTS MAPS: ROX AVENUS
