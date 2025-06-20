@@ -12,5 +12,21 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/riteshroshann/ALL-AI-GENTS-MAPS-ROX-Avenus.git"
+  },
+  "homepage": "https://riteshroshann.github.io/ALL-AI-GENTS-MAPS-ROX-Avenus",
+  "keywords": [
+    "AI",
+    "Agent",
+    "Discovery",
+    "Web"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/riteshroshann/ALL-AI-GENTS-MAPS-ROX-Avenus/issues"
   }
 }
