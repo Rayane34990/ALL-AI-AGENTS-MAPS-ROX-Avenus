@@ -1,7 +1,7 @@
 // API configuration for cloud deployment
 const API_CONFIG = {
   // Production API URL (will be set via environment variable)
-  PRODUCTION_URL: process.env.REACT_APP_API_URL || 'https://your-railway-app.railway.app',
+  PRODUCTION_URL: process.env.REACT_APP_API_URL || 'https://ai-agent-discovery-api.onrender.com',
   
   // Development API URL
   DEVELOPMENT_URL: 'http://localhost:8000',

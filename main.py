@@ -30,6 +30,7 @@ allowed_origins = [
     "http://localhost:3000",  # Development
     "https://your-app.vercel.app",  # Production frontend
     "https://*.vercel.app",  # Vercel previews
+    "https://*.onrender.com",  # Render services
 ]
 
 app.add_middleware(
