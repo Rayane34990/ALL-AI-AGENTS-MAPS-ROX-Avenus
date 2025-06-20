@@ -2,3 +2,6 @@ fastapi
 uvicorn
 sqlalchemy
 psycopg2-binary
+sentence-transformers  # Optional, for semantic deduplication
+requests
+beautifulsoup4

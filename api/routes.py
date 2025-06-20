@@ -1,20 +1,19 @@
 from fastapi import APIRouter, Query, HTTPException
-from db.models import Agent, get_all_agents, search_agents
+from db.models import Agent, get_all_agents, search_agents, SessionLocal
 from fastapi.responses import JSONResponse
-import sqlite3
-import os
 
 router = APIRouter()
 
 @router.get("/agents")
 def list_agents(page: int = Query(1, ge=1), limit: int = Query(20, ge=1, le=100)):
     try:
-        agents = get_all_agents()
-        start = (page - 1) * limit
-        end = start + limit
+        db = SessionLocal()
+        total = db.query(Agent).count()
+        agents = db.query(Agent).order_by(Agent.id.desc()).offset((page-1)*limit).limit(limit).all()
+        db.close()
         return {
-            "results": agents[start:end],
-            "total": len(agents),
+            "results": [a.__dict__ for a in agents],
+            "total": total,
             "page": page,
             "limit": limit
         }
@@ -23,14 +22,12 @@ def list_agents(page: int = Query(1, ge=1), limit: int = Query(20, ge=1, le=100)
 
 @router.get("/agents/{agent_id}")
 def get_agent(agent_id: int):
-    db_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../db/agents.db'))
-    conn = sqlite3.connect(db_path)
-    conn.row_factory = sqlite3.Row
-    agent = conn.execute('SELECT * FROM agents WHERE id=?', (agent_id,)).fetchone()
-    conn.close()
+    db = SessionLocal()
+    agent = db.query(Agent).filter_by(id=agent_id).first()
+    db.close()
     if not agent:
         raise HTTPException(status_code=404, detail="Agent not found")
-    return dict(agent)
+    return agent.__dict__
 
 @router.get("/search")
 def search(q: str):
@@ -46,34 +43,30 @@ def advanced_search(
     page: int = Query(1, ge=1),
     limit: int = Query(20, ge=1, le=100)
 ):
-    db_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../db/agents.db'))
-    conn = sqlite3.connect(db_path)
-    conn.row_factory = sqlite3.Row
-    query = 'SELECT * FROM agents WHERE 1=1'
-    params = []
+    db = SessionLocal()
+    query = db.query(Agent)
     if q:
-        query += ' AND (name LIKE ? OR description LIKE ? OR tags LIKE ? OR type LIKE ? OR source LIKE ? OR license LIKE ?)' 
-        for _ in range(6):
-            params.append(f'%{q}%')
+        query = query.filter(
+            Agent.name.ilike(f'%{q}%') |
+            Agent.description.ilike(f'%{q}%') |
+            Agent.tags.ilike(f'%{q}%') |
+            Agent.type.ilike(f'%{q}%') |
+            Agent.source.ilike(f'%{q}%') |
+            Agent.license.ilike(f'%{q}%')
+        )
     if type:
-        query += ' AND type=?'
-        params.append(type)
+        query = query.filter(Agent.type == type)
     if tag:
-        query += ' AND tags LIKE ?'
-        params.append(f'%{tag}%')
+        query = query.filter(Agent.tags.ilike(f'%{tag}%'))
     if license:
-        query += ' AND license=?'
-        params.append(license)
+        query = query.filter(Agent.license == license)
     if source:
-        query += ' AND source=?'
-        params.append(source)
-    query += ' ORDER BY id DESC LIMIT ? OFFSET ?'
-    params.extend([limit, (page-1)*limit])
-    agents = conn.execute(query, params).fetchall()
-    total = conn.execute('SELECT COUNT(*) FROM agents').fetchone()[0]
-    conn.close()
+        query = query.filter(Agent.source == source)
+    total = query.count()
+    agents = query.order_by(Agent.id.desc()).offset((page-1)*limit).limit(limit).all()
+    db.close()
     return {
-        "results": [dict(a) for a in agents],
+        "results": [a.__dict__ for a in agents],
         "total": total,
         "page": page,
         "limit": limit

@@ -2,23 +2,23 @@
 # Website: https://theresanaiforthat.com/ (scraping)
 
 import requests
-import sqlite3
 import os
+import sys
 from bs4 import BeautifulSoup
 import time
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../db')))
+from models import Agent, SessionLocal  # noqa: E402, F401, F403
 
-DB_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '../db/agents.db'))
 SITE_URL = "https://theresanaiforthat.com/"
 
 
 def insert_agent(agent):
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    c.execute('''INSERT OR IGNORE INTO agents (name, description, source, type, tags, deployment, license, repo_link, demo_link, paper_link, last_updated, related, rating, install)
-                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''',
-              (agent['name'], agent['description'], agent['source'], agent['type'], agent['tags'], agent['deployment'], agent['license'], agent['repo_link'], agent['demo_link'], agent['paper_link'], agent['last_updated'], agent['related'], agent['rating'], agent['install']))
-    conn.commit()
-    conn.close()
+    db = SessionLocal()
+    exists = db.query(Agent).filter_by(name=agent.name, source=agent.source).first()
+    if not exists:
+        db.add(agent)
+        db.commit()
+    db.close()
 
 def ingest_thereisnai():
     print("Scraping 'There’s An AI For That'...")
@@ -34,22 +34,22 @@ def ingest_thereisnai():
             description = card.select_one('.tool-card-description').get_text(strip=True)
             tags = ','.join([t.get_text(strip=True) for t in card.select('.tool-card-tag')])
             link = SITE_URL.rstrip('/') + card['href']
-            agent = {
-                'name': name,
-                'description': description,
-                'source': "There’s An AI For That",
-                'type': '',
-                'tags': tags,
-                'deployment': 'web',
-                'license': '',
-                'repo_link': link,
-                'demo_link': '',
-                'paper_link': '',
-                'last_updated': '',
-                'related': '',
-                'rating': '',
-                'install': ''
-            }
+            agent = Agent(
+                name=name,
+                description=description,
+                source="There’s An AI For That",
+                type='',
+                tags=tags,
+                deployment='web',
+                license='',
+                repo_link=link,
+                demo_link='',
+                paper_link='',
+                last_updated='',
+                related='',
+                rating='',
+                install=''
+            )
             insert_agent(agent)
             time.sleep(0.1)  # Be polite to the server
         print(f"Scraped {len(cards)} tools from There’s An AI For That.")

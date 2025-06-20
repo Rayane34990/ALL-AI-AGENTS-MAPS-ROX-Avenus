@@ -1,40 +1,40 @@
 import requests
-import sqlite3
-import os
 import time
+import os
+import sys
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../db')))
+from models import Agent, SessionLocal
 
 HF_API = "https://huggingface.co/api/models"
-DB_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '../db/agents.db'))
 
 # Helper to parse model metadata
 
 def parse_model(model):
     card_data = model.get('cardData', {})
-    return {
-        'name': model.get('modelId', ''),
-        'description': model.get('description', card_data.get('summary', '')),
-        'source': 'HuggingFace',
-        'type': '',  # To be inferred/classified
-        'tags': ','.join(model.get('tags', [])),
-        'deployment': ','.join(card_data.get('library_name', [])) if card_data.get('library_name') else '',
-        'license': model.get('license', card_data.get('license', '')),
-        'repo_link': f"https://huggingface.co/{model.get('modelId', '')}",
-        'demo_link': card_data.get('demo', ''),
-        'paper_link': card_data.get('paper', ''),
-        'last_updated': model.get('lastModified', ''),
-        'related': ','.join(card_data.get('related_models', [])) if card_data.get('related_models') else '',
-        'rating': '',
-        'install': card_data.get('pip', '')
-    }
+    return Agent(
+        name=model.get('modelId', ''),
+        description=model.get('description', card_data.get('summary', '')),
+        source='HuggingFace',
+        type='',  # To be inferred/classified
+        tags=','.join(model.get('tags', [])),
+        deployment=','.join(card_data.get('library_name', [])) if card_data.get('library_name') else '',
+        license=model.get('license', card_data.get('license', '')),
+        repo_link=f"https://huggingface.co/{model.get('modelId', '')}",
+        demo_link=card_data.get('demo', ''),
+        paper_link=card_data.get('paper', ''),
+        last_updated=model.get('lastModified', ''),
+        related=','.join(card_data.get('related_models', [])) if card_data.get('related_models') else '',
+        rating='',
+        install=card_data.get('pip', '')
+    )
 
 def insert_agent(agent):
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    c.execute('''INSERT OR IGNORE INTO agents (name, description, source, type, tags, deployment, license, repo_link, demo_link, paper_link, last_updated, related, rating, install)
-                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''',
-              (agent['name'], agent['description'], agent['source'], agent['type'], agent['tags'], agent['deployment'], agent['license'], agent['repo_link'], agent['demo_link'], agent['paper_link'], agent['last_updated'], agent['related'], agent['rating'], agent['install']))
-    conn.commit()
-    conn.close()
+    db = SessionLocal()
+    exists = db.query(Agent).filter_by(name=agent.name, source=agent.source).first()
+    if not exists:
+        db.add(agent)
+        db.commit()
+    db.close()
 
 def ingest_hf(query="ai", limit=100, max_pages=5, delay=1):
     print(f"Fetching Hugging Face models for query: {query}")

@@ -1,9 +1,8 @@
 import requests
-import sqlite3
 import os
+from db.models import Agent, SessionLocal, init_db
 
 GITHUB_API = "https://api.github.com/search/repositories"
-DB_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '../db/agents.db'))
 
 # You can set a GitHub token for higher rate limits
 GITHUB_TOKEN = os.environ.get('GITHUB_TOKEN')
@@ -31,13 +30,11 @@ def parse_repo(repo):
     }
 
 def insert_agent(agent):
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    c.execute('''INSERT OR IGNORE INTO agents (name, description, source, type, tags, deployment, license, repo_link, demo_link, paper_link, last_updated, related, rating, install)
-                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''',
-              (agent['name'], agent['description'], agent['source'], agent['type'], agent['tags'], agent['deployment'], agent['license'], agent['repo_link'], agent['demo_link'], agent['paper_link'], agent['last_updated'], agent['related'], agent['rating'], agent['install']))
-    conn.commit()
-    conn.close()
+    db = SessionLocal()
+    db_agent = Agent(**agent)
+    db.merge(db_agent)
+    db.commit()
+    db.close()
 
 def ingest_github(topic="ai-agent", max_pages=1):
     print(f"Fetching GitHub repos for topic: {topic}")
@@ -56,4 +53,5 @@ def ingest_github(topic="ai-agent", max_pages=1):
     print("GitHub ingestion complete.")
 
 if __name__ == "__main__":
+    init_db()
     ingest_github()

@@ -47,9 +47,15 @@ Welcome to the most ambitious, open-source AI discovery engine ever built. Our m
 
 ## 📚 Documentation & Quickstart
 - See the `/docs` folder for contributing guidelines and code of conduct.
-- Backend: FastAPI, SQLite, modular ingestion, deduplication, and analytics.
+- Backend: FastAPI, **PostgreSQL** (via SQLAlchemy), modular ingestion, deduplication, and analytics.
 - Frontend: React, advanced search/filter, analytics, and export.
 - Automated cloud deployment and updates (see workflows and README instructions).
+
+### PostgreSQL Setup
+- Set the `DATABASE_URL` environment variable to your PostgreSQL connection string (e.g., `postgresql://user:password@host:port/dbname`).
+- Install dependencies: `pip install -r requirements.txt`
+- Run `python -m db.models` to initialize tables if needed.
+- All ingestion, deduplication, and API scripts now use SQLAlchemy and are cloud-native.
 
 ---
 

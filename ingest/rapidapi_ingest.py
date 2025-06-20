@@ -1,37 +1,37 @@
 import requests
-import sqlite3
 import os
+import sys
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../db')))
+from models import Agent, SessionLocal  # noqa: E402, F401, F403
 
 RAPIDAPI_URL = "https://api.rapidapi.com/hub/apis"
-DB_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '../db/agents.db'))
 
 # Note: This is a placeholder; RapidAPI may require scraping or an API key for full access.
 def parse_api(api):
-    return {
-        'name': api.get('name', ''),
-        'description': api.get('description', ''),
-        'source': 'RapidAPI',
-        'type': '',
-        'tags': ','.join(api.get('categories', [])),
-        'deployment': '',
-        'license': '',
-        'repo_link': api.get('website', ''),
-        'demo_link': '',
-        'paper_link': '',
-        'last_updated': '',
-        'related': '',
-        'rating': '',
-        'install': ''
-    }
+    return Agent(
+        name=api.get('name', ''),
+        description=api.get('description', ''),
+        source='RapidAPI',
+        type='',
+        tags=','.join(api.get('categories', [])),
+        deployment='',
+        license='',
+        repo_link=api.get('website', ''),
+        demo_link='',
+        paper_link='',
+        last_updated='',
+        related='',
+        rating='',
+        install=''
+    )
 
 def insert_agent(agent):
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    c.execute('''INSERT OR IGNORE INTO agents (name, description, source, type, tags, deployment, license, repo_link, demo_link, paper_link, last_updated, related, rating, install)
-                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''',
-              (agent['name'], agent['description'], agent['source'], agent['type'], agent['tags'], agent['deployment'], agent['license'], agent['repo_link'], agent['demo_link'], agent['paper_link'], agent['last_updated'], agent['related'], agent['rating'], agent['install']))
-    conn.commit()
-    conn.close()
+    db = SessionLocal()
+    exists = db.query(Agent).filter_by(name=agent.name, source=agent.source).first()
+    if not exists:
+        db.add(agent)
+        db.commit()
+    db.close()
 
 def ingest_rapidapi():
     print("Fetching RapidAPI APIs...")

@@ -2,38 +2,38 @@
 # API: https://replicate.com/api/models (unofficial/public scraping)
 
 import requests
-import sqlite3
 import os
+import sys
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../db')))
+from models import Agent, SessionLocal  # noqa: E402, F401, F403
 
 REPLICATE_API = "https://replicate.com/api/models"
-DB_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '../db/agents.db'))
 
 def parse_model(model):
-    return {
-        'name': model.get('name', ''),
-        'description': model.get('description', ''),
-        'source': 'Replicate',
-        'type': '',
-        'tags': ','.join(model.get('tags', [])),
-        'deployment': '',
-        'license': model.get('license', ''),
-        'repo_link': f"https://replicate.com{model.get('url', '')}",
-        'demo_link': '',
-        'paper_link': '',
-        'last_updated': model.get('updated_at', ''),
-        'related': '',
-        'rating': '',
-        'install': ''
-    }
+    return Agent(
+        name=model.get('name', ''),
+        description=model.get('description', ''),
+        source='Replicate',
+        type='',
+        tags=','.join(model.get('tags', [])),
+        deployment='',
+        license=model.get('license', ''),
+        repo_link=f"https://replicate.com{model.get('url', '')}",
+        demo_link='',
+        paper_link='',
+        last_updated=model.get('updated_at', ''),
+        related='',
+        rating='',
+        install=''
+    )
 
 def insert_agent(agent):
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    c.execute('''INSERT OR IGNORE INTO agents (name, description, source, type, tags, deployment, license, repo_link, demo_link, paper_link, last_updated, related, rating, install)
-                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''',
-              (agent['name'], agent['description'], agent['source'], agent['type'], agent['tags'], agent['deployment'], agent['license'], agent['repo_link'], agent['demo_link'], agent['paper_link'], agent['last_updated'], agent['related'], agent['rating'], agent['install']))
-    conn.commit()
-    conn.close()
+    db = SessionLocal()
+    exists = db.query(Agent).filter_by(name=agent.name, source=agent.source).first()
+    if not exists:
+        db.add(agent)
+        db.commit()
+    db.close()
 
 def ingest_replicate():
     print("Fetching Replicate.com models...")

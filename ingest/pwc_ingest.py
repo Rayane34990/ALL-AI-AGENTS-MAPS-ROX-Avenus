@@ -1,11 +1,8 @@
 import requests
-import sqlite3
+from db.models import Agent, SessionLocal, init_db
 import os
 
 PWC_API = "https://paperswithcode.com/api/v1/papers/"
-DB_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '../db/agents.db'))
-
-# You can set a Papers With Code API token for more access
 PWC_TOKEN = os.environ.get('PWC_TOKEN')
 HEADERS = {'Authorization': f'Token {PWC_TOKEN}'} if PWC_TOKEN else {}
 
@@ -28,13 +25,11 @@ def parse_paper(paper):
     }
 
 def insert_agent(agent):
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    c.execute('''INSERT OR IGNORE INTO agents (name, description, source, type, tags, deployment, license, repo_link, demo_link, paper_link, last_updated, related, rating, install)
-                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''',
-              (agent['name'], agent['description'], agent['source'], agent['type'], agent['tags'], agent['deployment'], agent['license'], agent['repo_link'], agent['demo_link'], agent['paper_link'], agent['last_updated'], agent['related'], agent['rating'], agent['install']))
-    conn.commit()
-    conn.close()
+    db = SessionLocal()
+    db_agent = Agent(**agent)
+    db.merge(db_agent)
+    db.commit()
+    db.close()
 
 def ingest_pwc(query="artificial intelligence", page=1):
     print(f"Fetching Papers With Code papers for query: {query}")
@@ -50,4 +45,5 @@ def ingest_pwc(query="artificial intelligence", page=1):
     print("Papers With Code ingestion complete.")
 
 if __name__ == "__main__":
+    init_db()
     ingest_pwc()
