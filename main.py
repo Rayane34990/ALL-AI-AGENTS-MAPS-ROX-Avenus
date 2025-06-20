@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Main FastAPI application entry point.
-Starts the AI Agent Discovery API server.
+Cloud-native AI Agent Discovery API server.
 """
 
 from fastapi import FastAPI
@@ -9,22 +9,32 @@ from fastapi.middleware.cors import CORSMiddleware
 from api.routes import router
 from db.models import init_db
 import os
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 # Initialize database tables on startup
 init_db()
 
 app = FastAPI(
     title="AI Agent Discovery API",
-    description="The ultimate open-source AI discovery platform API",
+    description="🤖 The ultimate open-source AI discovery platform API",
     version="1.0.0",
     docs_url="/docs",
     redoc_url="/redoc"
 )
 
-# CORS middleware for frontend
+# CORS middleware for cloud deployment
+allowed_origins = [
+    "http://localhost:3000",  # Development
+    "https://your-app.vercel.app",  # Production frontend
+    "https://*.vercel.app",  # Vercel previews
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "https://riteshroshann.github.io"],
+    allow_origins=allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -37,15 +47,16 @@ app.include_router(router, prefix="/api")
 async def root():
     """Health check endpoint."""
     return {
-        "message": "AI Agent Discovery API",
+        "message": "🤖 AI Agent Discovery API",
         "status": "running",
         "version": "1.0.0",
-        "docs": "/docs"
+        "docs": "/docs",
+        "environment": os.environ.get("ENVIRONMENT", "development")
     }
 
 @app.get("/health")
 async def health_check():
-    """Detailed health check."""
+    """Detailed health check for cloud monitoring."""
     try:
         from db.models import SessionLocal, Agent
         db = SessionLocal()
@@ -56,14 +67,18 @@ async def health_check():
             "status": "healthy",
             "database": "connected",
             "total_agents": agent_count,
-            "database_url": os.environ.get('DATABASE_URL', 'not set').split('@')[0] + "@***"
+            "environment": os.environ.get("ENVIRONMENT", "development"),
+            "database_url": "configured" if os.environ.get('DATABASE_URL') else "missing"
         }
     except Exception as e:
         return {
             "status": "unhealthy",
-            "error": str(e)
+            "error": str(e),
+            "environment": os.environ.get("ENVIRONMENT", "development")
         }
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000, reload=True)
+    port = int(os.environ.get("PORT", 8000))
+    host = os.environ.get("HOST", "0.0.0.0")
+    uvicorn.run(app, host=host, port=port, reload=False)
