@@ -15,18 +15,18 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/riteshroshann/ALL-AI-GENTS-MAPS-ROX-Avenus.git"
+    "url": "git+https://github.com/riteshroshann/ALL-AI-AGENTS-MAPS-ROX-Avenus.git"
   },
-  "homepage": "https://riteshroshann.github.io/ALL-AI-GENTS-MAPS-ROX-Avenus",
+  "bugs": {
+    "url": "https://github.com/riteshroshann/ALL-AI-AGENTS-MAPS-ROX-Avenus/issues"
+  },
+  "homepage": "https://riteshroshann.github.io/ALL-AI-AGENTS-MAPS-ROX-Avenus",
   "keywords": [
     "AI",
     "Agent",
     "Discovery",
     "Web"
   ],
-  "author": "Your Name",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/riteshroshann/ALL-AI-GENTS-MAPS-ROX-Avenus/issues"
-  }
+  "author": "Ritesh Roshan",
+  "license": "MIT"
 }
