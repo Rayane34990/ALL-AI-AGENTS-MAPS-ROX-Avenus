@@ -1,0 +1,9 @@
+# Ignore Python cache and venv
+__pycache__/
+.venv/
+# Ignore SQLite DB if not needed in repo
+db/agents.db
+# Ignore environment files
+.env
+# Ignore node_modules for frontend
+web/node_modules/
