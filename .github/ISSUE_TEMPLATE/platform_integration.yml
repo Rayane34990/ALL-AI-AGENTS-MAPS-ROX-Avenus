@@ -1,0 +1,113 @@
+name: 🎯 Request New AI Platform Integration
+description: Suggest a new AI platform for integration
+title: "[INTEGRATION] Add support for [Platform Name]"
+labels: ["enhancement", "integration", "good first issue"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 🚀 Help Expand Our AI Coverage!
+        
+        We're always looking to add support for new AI platforms and repositories. 
+        Your suggestion could help thousands of researchers discover new AI capabilities!
+        
+        **Popular integration requests:**
+        - 🤗 Anthropic Claude models
+        - 🧠 OpenAI API models  
+        - 🔬 Google AI models
+        - 📚 Microsoft AI models
+        - 🎯 Specialized research labs
+
+  - type: input
+    id: platform_name
+    attributes:
+      label: Platform Name
+      description: What AI platform should we integrate with?
+      placeholder: e.g., "Anthropic", "OpenAI", "Google AI", etc.
+    validations:
+      required: true
+
+  - type: input
+    id: platform_url
+    attributes:
+      label: Platform URL
+      description: Main website or API documentation URL
+      placeholder: https://...
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Platform Description
+      description: What types of AI models/tools does this platform provide?
+      placeholder: This platform provides...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: model_types
+    attributes:
+      label: Primary Model Types
+      description: What types of AI models are available?
+      multiple: true
+      options:
+        - Language Models (LLMs)
+        - Computer Vision
+        - Audio/Speech
+        - Multimodal
+        - Reinforcement Learning
+        - Time Series
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: estimated_models
+    attributes:
+      label: Estimated Number of Models
+      description: Approximately how many models are available?
+      placeholder: e.g., "100+", "1000+", "10,000+"
+
+  - type: textarea
+    id: api_info
+    attributes:
+      label: API Information
+      description: Does the platform have a public API? Any rate limits or requirements?
+      placeholder: API availability, rate limits, authentication requirements...
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Integration Priority
+      description: How important is this integration?
+      options:
+        - High - Major platform with many users
+        - Medium - Growing platform with good content
+        - Low - Niche platform or research lab
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: contribution
+    attributes:
+      label: Contribution Interest
+      description: Would you like to help implement this integration?
+      options:
+        - label: I'd like to implement this integration myself
+          required: false
+        - label: I can help with testing and validation
+          required: false
+        - label: I have access to the platform's API/data
+          required: false
+        - label: I know someone at this platform who could help
+          required: false
+
+  - type: textarea
+    id: additional_info
+    attributes:
+      label: Additional Information
+      description: Any other details that would help with implementation?
+      placeholder: Special considerations, contacts, documentation links, etc.

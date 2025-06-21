@@ -1,0 +1,45 @@
+name: ⭐ Star this repo
+description: Show your support by starring this repository
+title: "⭐ Star this repository to show support"
+labels: ["good first issue", "help wanted"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 🌟 Help Us Grow!
+        
+        **Why star this repository?**
+        - 📊 Support open AI research and discovery
+        - 🚀 Help more researchers find this valuable tool
+        - 💝 Show appreciation for our work
+        - 📈 Boost visibility in the GitHub community
+        
+        **What happens when you star:**
+        - ⭐ Increases project visibility on GitHub
+        - 📧 You'll get notified of major updates
+        - 🏆 Join our growing community of AI researchers
+        - 🎯 Help us reach trending status in AI repositories
+        
+        **Already starred?** Consider:
+        - 🐦 Sharing on Twitter with #AIDiscovery
+        - 💬 Joining our [Discord community](https://discord.gg/ai-knowledge)
+        - 📝 Writing a review or blog post about the platform
+        - 🤝 Contributing code or documentation
+
+  - type: checkboxes
+    id: actions
+    attributes:
+      label: I will help by
+      options:
+        - label: ⭐ Starring this repository
+          required: false
+        - label: 🐦 Sharing on social media
+          required: false  
+        - label: 📝 Writing a review or blog post
+          required: false
+        - label: 🤝 Contributing to the codebase
+          required: false
+        - label: 💬 Joining the Discord community
+          required: false
