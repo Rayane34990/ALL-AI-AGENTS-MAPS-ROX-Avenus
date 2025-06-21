@@ -1,6 +1,7 @@
 {
-  "name": "ai-agent-discovery-web",
-  "version": "0.1.0",
+  "name": "ai-knowledge-graph-web",
+  "version": "1.0.0",
+  "description": "Frontend interface for the AI Knowledge Graph Engine - large-scale automated discovery and mapping of AI capabilities",
   "private": true,
   "dependencies": {
     "react": "^18.0.0",

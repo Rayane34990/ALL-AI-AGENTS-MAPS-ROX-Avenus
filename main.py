@@ -20,8 +20,8 @@ logger = logging.getLogger(__name__)
 load_dotenv()
 
 app = FastAPI(
-    title="AI Agent Discovery API",
-    description="🤖 The ultimate open-source AI discovery platform API",
+    title="AI Knowledge Graph Engine",
+    description="� Large-scale automated discovery and mapping of AI capabilities across distributed platforms. Real-time ingestion, semantic deduplication, and graph-based knowledge representation for comprehensive AI ecosystem analysis.",
     version="1.0.0",
     docs_url="/docs",
     redoc_url="/redoc"
@@ -58,13 +58,12 @@ async def startup_event():
             db.close()
             
     except Exception as e:
-        logger.error(f"❌ Startup failed: {e}")
-        # Don't crash the app, but log the error
+        logger.error(f"❌ Startup failed: {e}")        # Don't crash the app, but log the error
         # raise e  # Uncomment to crash on startup errors
 
 app = FastAPI(
-    title="AI Agent Discovery API",
-    description="🤖 The ultimate open-source AI discovery platform API",
+    title="AI Knowledge Graph Engine",
+    description="� Large-scale automated discovery and mapping of AI capabilities across distributed platforms. Real-time ingestion, semantic deduplication, and graph-based knowledge representation for comprehensive AI ecosystem analysis.",
     version="1.0.0",
     docs_url="/docs",
     redoc_url="/redoc"
