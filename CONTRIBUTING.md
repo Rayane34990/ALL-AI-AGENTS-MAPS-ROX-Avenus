@@ -1,27 +1,24 @@
-# Contributing to AI Knowledge Graph Engine
+# Contribution Guidelines
 
-We welcome contributions from researchers, engineers, and AI practitioners worldwide. This document outlines our contribution process and standards.
+We welcome contributions to the AI Knowledge Graph Engine! This project is open source under the MIT License, which means you're free to use, modify, and distribute the code. However, we encourage all improvements to be contributed back to benefit the entire community.
 
-## Overview
+## Preferred Contribution Workflow
 
-The AI Knowledge Graph Engine is a research-grade system for automated AI capability discovery. We maintain high standards for code quality, documentation, and scientific rigor.
+### 1. **Contribute Rather Than Fork**
+While the MIT license allows forking, we strongly encourage:
+- **Contributing back** to this main repository via pull requests
+- **Collaborating** with the core team rather than maintaining separate forks
+- **Sharing improvements** so everyone benefits from your work
 
-## Development Philosophy
-
-- **Research Excellence**: All contributions should advance the state-of-the-art in AI discovery systems
-- **Reproducibility**: Code must be reproducible with clear documentation and test coverage
-- **Scalability**: Solutions should handle millions of AI artifacts with sub-second response times
-- **Open Science**: Transparent, peer-reviewable, and community-driven development
+### 2. **Why Contribute Here?**
+- **Visibility**: Your contributions get recognition in a high-profile project
+- **Community**: Work with leading AI researchers and engineers
+- **Impact**: Help build the definitive AI discovery platform
+- **Support**: Get code reviews, feedback, and mentorship from experts
 
 ## Getting Started
 
-### Prerequisites
-- Python 3.9+ with type hints
-- PostgreSQL 13+ experience
-- Familiarity with FastAPI, SQLAlchemy
-- Understanding of distributed systems concepts
-
-### Development Environment
+### Development Setup
 ```bash
 git clone https://github.com/riteshroshann/ALL-AI-AGENTS-MAPS-ROX-Avenus.git
 cd ALL-AI-AGENTS-MAPS-ROX-Avenus
@@ -32,15 +29,43 @@ pip install -r requirements-dev.txt
 pre-commit install
 ```
 
-### Code Standards
+### Before Contributing
+1. **Check existing issues** to avoid duplicate work
+2. **Create an issue** to discuss major changes
+3. **Fork the repository** for your development
+4. **Create a feature branch** from main
+5. **Follow our coding standards** (see below)
 
-#### Python Style
-- Follow PEP 8 with 88-character line limit
-- Use type hints for all function signatures
-- Docstrings in Google format
-- Minimum 85% test coverage
+## Contribution Areas
 
-#### Example Function
+### 🔬 **Research Contributions**
+- Novel deduplication algorithms
+- Advanced NLP for capability extraction
+- Graph neural networks for knowledge representation
+- Performance optimizations
+
+### 🛠 **Engineering Contributions**
+- New data source integrations
+- API enhancements
+- Infrastructure improvements
+- Bug fixes and optimizations
+
+### 📊 **Data Science Contributions**
+- Analytics and visualization
+- Trend analysis algorithms
+- Recommendation systems
+- Quality metrics
+
+## Code Standards
+
+### Python Guidelines
+- **Style**: Follow PEP 8 with 88-character line limit
+- **Type Hints**: Required for all function signatures
+- **Docstrings**: Google format for all public functions
+- **Testing**: Minimum 85% coverage for new code
+- **Security**: Pass all security scans (bandit, safety)
+
+### Example Function
 ```python
 from typing import List, Optional
 import asyncio
@@ -68,157 +93,120 @@ async def process_ai_artifacts(
     pass
 ```
 
-## Contribution Areas
+## Pull Request Process
 
-### 🔬 Research Contributions
-- Novel deduplication algorithms
-- Advanced NLP for capability extraction
-- Graph neural networks for knowledge representation
-- Scalability optimizations
-
-### 🛠 Engineering Contributions
-- New data source integrations
-- Performance optimizations
-- Infrastructure improvements
-- API enhancements
-
-### 📊 Data Science Contributions
-- Analytics and visualization
-- Trend analysis algorithms
-- Recommendation systems
-- Quality metrics
-
-## Submission Process
-
-### 1. Issue Discussion
-Before coding, create an issue to discuss:
-- Problem statement and motivation
-- Proposed approach and alternatives
-- Success metrics and evaluation plan
-
-### 2. Development Workflow
+### 1. **Preparation**
 ```bash
 # Create feature branch
-git checkout -b feature/semantic-search-improvement
+git checkout -b feature/your-improvement-name
 
-# Make changes with commits following conventional format
-git commit -m "feat(search): implement transformer-based semantic matching
+# Make your changes
+# ... coding ...
 
-- Add sentence-transformers for query embedding
-- Implement cosine similarity ranking
-- Add benchmark showing 15% precision improvement
-- Include comprehensive unit tests
-
-Closes #123"
-
-# Push and create pull request
-git push origin feature/semantic-search-improvement
+# Run tests and checks
+pytest tests/ --cov=src/
+flake8 src/ tests/
+black src/ tests/
+mypy src/
 ```
 
-### 3. Pull Request Requirements
+### 2. **Submission**
+```bash
+# Commit with conventional format
+git commit -m "feat(component): add new capability
 
-#### Code Quality
-- [ ] All tests pass (`pytest tests/`)
-- [ ] Code coverage ≥85% (`pytest --cov=src/`)
-- [ ] Type checking passes (`mypy src/`)
-- [ ] Linting passes (`flake8 src/`, `black src/`)
-- [ ] No security issues (`bandit -r src/`)
+- Implement feature X with Y algorithm
+- Add comprehensive tests and documentation
+- Include performance benchmarks
+- Resolves #123"
 
-#### Documentation
-- [ ] Docstrings for all public functions/classes
-- [ ] README updates if applicable
-- [ ] Performance impact documented
-- [ ] Migration guide for breaking changes
+# Push to your fork
+git push origin feature/your-improvement-name
+```
 
-#### Testing
-- [ ] Unit tests for new functionality
-- [ ] Integration tests for API changes
-- [ ] Performance benchmarks for optimizations
-- [ ] Edge case handling
-
-### 4. Review Process
-
-#### Automated Checks
-- GitHub Actions CI/CD pipeline
-- Code quality gates
-- Security scanning
-- Performance regression tests
-
-#### Human Review
-- Code review by maintainers
-- Architecture review for major changes
-- Performance review for optimizations
-- Documentation review
-
-## Specific Guidelines
-
-### Adding New Data Sources
-
-1. **Create ingestion module**: `ingest/{source}_ingest.py`
-2. **Implement required interface**:
-   ```python
-   class SourceIngestor(BaseIngestor):
-       async def fetch_artifacts(self) -> AsyncIterator[RawArtifact]:
-           """Fetch artifacts from source."""
-           
-       async def parse_artifact(self, raw: RawArtifact) -> AIArtifact:
-           """Parse raw data into structured format."""
-           
-       async def validate_artifact(self, artifact: AIArtifact) -> bool:
-           """Validate artifact quality and completeness."""
-   ```
-3. **Add comprehensive tests**
-4. **Update documentation**
-
-### Performance Optimization
-
-1. **Benchmark current performance**:
-   ```bash
-   python benchmarks/run_benchmarks.py --target=search
-   ```
-2. **Implement optimization with metrics**
-3. **Verify improvement with statistical significance**
-4. **Document performance characteristics**
-
-### Database Schema Changes
-
-1. **Create migration script**: `migrations/v{version}_{description}.py`
-2. **Test migration on production-sized dataset**
-3. **Document rollback procedure**
-4. **Update ORM models and tests**
-
-## Community Guidelines
-
-### Communication
-- Be respectful and inclusive
-- Focus on technical merit
-- Provide constructive feedback
-- Share knowledge and mentor others
-
-### Research Ethics
-- Respect data source terms of service
-- Ensure privacy and compliance
-- Acknowledge prior work and contributions
-- Practice responsible AI development
+### 3. **Pull Request Requirements**
+- [ ] **Code Quality**: All tests pass, >85% coverage
+- [ ] **Documentation**: Updated README, docstrings, API docs
+- [ ] **Performance**: No regressions, include benchmarks
+- [ ] **Security**: No vulnerabilities, follow security practices
+- [ ] **Review**: Address all reviewer feedback
 
 ## Recognition
 
-Contributors are recognized through:
-- GitHub contributor graphs
-- Release notes acknowledgments
-- Conference presentations (for significant contributions)
-- Co-authorship on research papers (for research contributions)
+### Contributor Benefits
+- **Attribution** in release notes and project documentation
+- **GitHub contributor** status and commit history
+- **Conference presentations** for significant contributions
+- **Co-authorship** on research papers (for research contributions)
+- **Mentorship** and collaboration opportunities
+- **Professional networking** with AI/ML experts
 
-## Questions?
+### Hall of Fame
+Outstanding contributors may be invited to join our **Technical Advisory Board** or become **Core Maintainers** with additional privileges and responsibilities.
 
-- **Technical Questions**: Create a GitHub issue with the `question` label
-- **Research Collaboration**: Email research@ai-knowledge.dev
+## Alternative Licensing for Commercial Use
+
+While this project is MIT licensed (free for all uses), we offer **additional support and services**:
+
+### Commercial Support Options
+- **Priority Support**: Fast-track issue resolution
+- **Custom Features**: Paid development of specific features
+- **Consulting Services**: Architecture review and optimization
+- **Training Workshops**: Team training and best practices
+- **Enterprise Deployment**: Managed cloud deployment
+
+Contact: enterprise@ai-knowledge.dev
+
+## Communication
+
+### Getting Help
+- **Technical Questions**: Create GitHub issues with `question` label
+- **Feature Requests**: Use `enhancement` label with detailed requirements
+- **Bug Reports**: Include reproduction steps and system information
 - **Security Issues**: Email security@ai-knowledge.dev (private disclosure)
 
-## License
+### Community Channels
+- **GitHub Discussions**: General conversations and ideas
+- **Discord/Slack**: Real-time chat with contributors (link in README)
+- **Monthly Meetings**: Virtual contributor meetups (calendar link in README)
 
-By contributing, you agree that your contributions will be licensed under the MIT License.
+## License and Legal
+
+### MIT License Benefits
+- ✅ **Free commercial use** allowed
+- ✅ **Modify and distribute** as needed
+- ✅ **Private use** permitted
+- ✅ **No warranty obligations**
+
+### Contributor License Agreement
+By contributing, you agree that:
+- Your contributions will be licensed under MIT
+- You have the right to make the contribution
+- You retain copyright to your contributions
+- The project maintainers can use your contributions
+
+## Quality Standards
+
+### Code Review Criteria
+1. **Functionality**: Code works as intended
+2. **Performance**: No significant regressions
+3. **Security**: Follows security best practices
+4. **Maintainability**: Clean, readable, well-documented
+5. **Testing**: Comprehensive test coverage
+6. **Innovation**: Advances the state-of-the-art
+
+### Automated Checks
+- **GitHub Actions**: CI/CD pipeline with quality gates
+- **Code Quality**: flake8, black, mypy, bandit
+- **Security Scanning**: dependency vulnerabilities
+- **Performance Testing**: regression detection
+
+## Thank You!
+
+Every contribution makes this project better. Whether you're fixing a typo, adding a feature, or proposing a new research direction, your work helps advance AI discovery for everyone.
+
+**Together, we're building the future of AI knowledge discovery.** 🚀
 
 ---
 
-Thank you for helping advance the state-of-the-art in AI discovery systems!
+*For questions about contributing, email: contributors@ai-knowledge.dev*

@@ -1,3 +1,6 @@
+# AI Knowledge Graph Engine - Core Dependencies
+# MIT Licensed - Open source AI discovery platform
+
 fastapi>=0.104.0
 uvicorn[standard]>=0.24.0
 sqlalchemy>=2.0.0
