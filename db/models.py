@@ -3,8 +3,24 @@ from sqlalchemy import create_engine, Column, Integer, String, Text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
+# Use connection pooling for better cloud compatibility
 DB_URL = os.environ.get('DATABASE_URL', 'sqlite:///c:/Users/rites/vsCodePractice/db/agents.db')
-engine = create_engine(DB_URL, connect_args={"check_same_thread": False} if DB_URL.startswith('sqlite') else {})
+
+# Fix for Render + Supabase connection issues
+if DB_URL and 'supabase.co' in DB_URL:
+    # Use connection pooling and SSL
+    engine = create_engine(
+        DB_URL, 
+        pool_pre_ping=True,
+        pool_recycle=300,
+        connect_args={
+            "sslmode": "require",
+            "options": "-c timezone=utc"
+        }
+    )
+else:
+    engine = create_engine(DB_URL, connect_args={"check_same_thread": False} if DB_URL.startswith('sqlite') else {})
+
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
