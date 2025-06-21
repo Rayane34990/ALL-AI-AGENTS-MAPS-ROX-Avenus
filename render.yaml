@@ -1,0 +1,18 @@
+# Render.com Configuration
+# This file tells Render how to build and deploy your app
+
+# Build settings
+build:
+  - pip install -r requirements.txt
+
+# Start command (using Render-optimized startup script)
+start: python start_render.py
+
+# Environment
+environment: python
+
+# Python version
+pythonVersion: 3.11.0
+
+# Health check
+healthCheckPath: /health
